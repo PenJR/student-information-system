@@ -1,0 +1,33 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/academic-terms'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "academic_year": "2026-2027",
+      "term": "FIRST",
+      "start_date": "2026-08-01",
+      "end_date": "2026-12-20",
+      "status": "UPCOMING"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created term has id and academic_year", () => {
+        const json = pm.response.json();
+        const term = json.data || json;
+        pm.expect(term).to.have.property("id");
+        pm.expect(term).to.have.property("academic_year");
+      });

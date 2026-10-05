@@ -1,0 +1,33 @@
+$kind: http-request
+order: 1000
+method: GET
+url: '{{base_url}}/students'
+headers:
+  - key: Accept
+    value: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has paginated data", () => {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("data");
+        pm.expect(json.data).to.be.an("array");
+      });
+
+      pm.test("Pagination meta is present", () => {
+        const json = pm.response.json();
+        pm.expect(json).to.satisfy(j => j.meta || j.total !== undefined || j.current_page !== undefined,
+          "Expected pagination metadata");
+      });
+
+      const json = pm.response.json();
+      const list = json.data || [];
+      if (list.length > 0) {
+        pm.environment.set("student_id", list[0].id);
+        console.log("student_id set to", list[0].id);
+      }

@@ -1,0 +1,17 @@
+$kind: collection
+name: 'Student Information API'
+description: |-
+  Laravel 12 REST API for student information and academic records.
+  
+  Run the collection in order — the Auth folder runs first and sets the `auth_token`
+  environment variable used by all subsequent requests.
+  
+  Seed credentials:
+  - Admin:   admin@example.test / password
+  - Staff:   staff@example.test / password
+  - Student: student@example.test / password
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{auth_token}}'

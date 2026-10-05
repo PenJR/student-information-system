@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Student Information Management API
+  version: 1.0.0
+  description: |
+    Laravel 12 REST API for student information and academic records.
+    Grade values are percentages from 0 to 100. Status values are documented in README.md.
+servers:
+  - url: http://localhost:8000/api/v1
+security:
+  - bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      security: []
+      summary: Log in and issue a Sanctum token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200': { description: Login successful }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /auth/logout:
+    post:
+      summary: Revoke the authenticated user's tokens
+      responses:
+        '200': { description: Logout successful }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /auth/me:
+    get:
+      summary: Get the authenticated user
+      responses:
+        '200': { description: Authenticated user }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /students:
+    get:
+      summary: List students with search, filters, sorting, and pagination
+      parameters:
+        - { name: search, in: query, schema: { type: string } }
+        - { name: program_id, in: query, schema: { type: integer } }
+        - { name: year_level, in: query, schema: { type: integer, minimum: 1, maximum: 4 } }
+        - { name: status, in: query, schema: { type: string } }
+        - { name: sort, in: query, schema: { type: string, enum: [student_number, first_name, last_name, year_level, created_at] } }
+        - { name: per_page, in: query, schema: { type: integer, maximum: 100 } }
+      responses:
+        '200': { description: Paginated students }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      summary: Create a student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StudentRequest' }
+      responses:
+        '201': { description: Student created }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /students/{student}:
+    parameters:
+      - { name: student, in: path, required: true, schema: { type: integer } }
+    get:
+      summary: Retrieve a student; students may retrieve only themselves
+      responses:
+        '200': { description: Student }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { description: Not found }
+    patch:
+      summary: Update a student
+      responses:
+        '200': { description: Student updated }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /programs:
+    get: { summary: List programs, responses: { '200': { description: Programs } } }
+    post: { summary: Create a program, responses: { '201': { description: Program created }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /courses:
+    get: { summary: List courses, responses: { '200': { description: Courses } } }
+    post: { summary: Create a course, responses: { '201': { description: Course created }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /academic-terms:
+    get: { summary: List academic terms, responses: { '200': { description: Academic terms } } }
+    post: { summary: Create an academic term, responses: { '201': { description: Academic term created }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /course-offerings:
+    get: { summary: List course offerings, responses: { '200': { description: Course offerings } } }
+    post: { summary: Create a course offering, responses: { '201': { description: Course offering created }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /enrollments:
+    get: { summary: List enrollments, responses: { '200': { description: Enrollments } } }
+    post: { summary: Enroll a student, responses: { '201': { description: Enrollment created }, '409': { description: Duplicate enrollment }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /grades:
+    get: { summary: List authorized grades, responses: { '200': { description: Grades } } }
+    post: { summary: Create a grade, responses: { '201': { description: Grade created }, '403': { $ref: '#/components/responses/Forbidden' }, '422': { $ref: '#/components/responses/ValidationError' } } }
+  /students/{student}/academic-record:
+    get:
+      summary: Retrieve academic history grouped by academic term
+      responses:
+        '200': { description: Grouped academic record }
+        '403': { $ref: '#/components/responses/Forbidden' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+    StudentRequest:
+      type: object
+      required: [student_number, first_name, last_name, program_id, year_level]
+      properties:
+        student_number: { type: string }
+        first_name: { type: string }
+        middle_name: { type: string, nullable: true }
+        last_name: { type: string }
+        program_id: { type: integer }
+        year_level: { type: integer, minimum: 1, maximum: 4 }
+        status: { type: string, enum: [ACTIVE, INACTIVE, GRADUATED, SUSPENDED] }
+    Error:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        message: { type: string }
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Authentication required
+    Forbidden:
+      description: Authenticated user lacks permission

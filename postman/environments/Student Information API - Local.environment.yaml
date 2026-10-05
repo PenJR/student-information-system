@@ -1,0 +1,50 @@
+name: 'Student Information API - Local'
+values:
+  - key: base_url
+    value: 'http://localhost:8000/api/v1'
+    description: 'Base URL for the Student Information API'
+    enabled: true
+  - key: auth_token
+    value: ''
+    description: 'Bearer token set automatically after login'
+    enabled: true
+  - key: admin_email
+    value: 'admin@example.test'
+    description: 'Demo administrator email'
+    enabled: true
+  - key: admin_password
+    value: 'password'
+    description: 'Demo administrator password'
+    enabled: true
+  - key: student_email
+    value: 'student@example.test'
+    description: 'Demo student email'
+    enabled: true
+  - key: student_password
+    value: 'password'
+    description: 'Demo student password'
+    enabled: true
+  - key: student_id
+    value: ''
+    description: 'Student ID set dynamically during tests'
+    enabled: true
+  - key: program_id
+    value: ''
+    description: 'Program ID set dynamically during tests'
+    enabled: true
+  - key: course_id
+    value: ''
+    description: 'Course ID set dynamically during tests'
+    enabled: true
+  - key: academic_term_id
+    value: ''
+    description: 'Academic term ID set dynamically during tests'
+    enabled: true
+  - key: course_offering_id
+    value: ''
+    description: 'Course offering ID set dynamically during tests'
+    enabled: true
+  - key: enrollment_id
+    value: ''
+    description: 'Enrollment ID set dynamically during tests'
+    enabled: true

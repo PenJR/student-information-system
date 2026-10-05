@@ -1,0 +1,39 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/enrollments'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "student_id": {{student_id}},
+      "course_offering_id": {{course_offering_id}},
+      "enrollment_date": "2026-08-15",
+      "status": "ENROLLED"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created enrollment has id and status", () => {
+        const json = pm.response.json();
+        const enrollment = json.data || json;
+        pm.expect(enrollment).to.have.property("id");
+        pm.expect(enrollment).to.have.property("status");
+      });
+
+      const json = pm.response.json();
+      const enrollment = json.data || json;
+      if (enrollment && enrollment.id) {
+        pm.environment.set("enrollment_id", enrollment.id);
+        console.log("enrollment_id set to", enrollment.id);
+      }

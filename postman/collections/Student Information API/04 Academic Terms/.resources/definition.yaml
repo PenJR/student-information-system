@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Academic Terms'
+description: 'Academic terms (semesters). List Academic Terms saves academic_term_id for use in course offerings.'

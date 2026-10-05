@@ -1,0 +1,29 @@
+$kind: http-request
+order: 4000
+method: PATCH
+url: '{{base_url}}/students/{{student_id}}'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "year_level": 2
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Student year_level was updated", () => {
+        const json = pm.response.json();
+        const student = json.data || json;
+        pm.expect(student).to.have.property("year_level");
+        pm.expect(student.year_level).to.equal(2);
+      });

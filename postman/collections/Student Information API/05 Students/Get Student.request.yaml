@@ -1,0 +1,24 @@
+$kind: http-request
+order: 3000
+method: GET
+url: '{{base_url}}/students/{{student_id}}'
+headers:
+  - key: Accept
+    value: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Student has expected fields", () => {
+        const json = pm.response.json();
+        const student = json.data || json;
+        pm.expect(student).to.have.property("id");
+        pm.expect(student).to.have.property("first_name");
+        pm.expect(student).to.have.property("last_name");
+        pm.expect(student).to.have.property("student_number");
+        pm.expect(student).to.have.property("email");
+      });

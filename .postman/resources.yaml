@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 4916cfc2-a7c9-483a-825c-993b8e60ee84
+
+localResources:
+  specs:
+    - ../student-information-api/docs/openapi.yaml

@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Academic Record'
+description: 'Full academic record for a student — all enrollments and grades in one view.'

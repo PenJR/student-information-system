@@ -1,0 +1,27 @@
+$kind: http-request
+order: 1000
+method: GET
+url: '{{base_url}}/enrollments'
+headers:
+  - key: Accept
+    value: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has data array", () => {
+        const json = pm.response.json();
+        const list = Array.isArray(json) ? json : (json.data || []);
+        pm.expect(list).to.be.an("array");
+      });
+
+      const json = pm.response.json();
+      const list = Array.isArray(json) ? json : (json.data || []);
+      if (list.length > 0) {
+        pm.environment.set("enrollment_id", list[0].id);
+        console.log("enrollment_id set to", list[0].id);
+      }

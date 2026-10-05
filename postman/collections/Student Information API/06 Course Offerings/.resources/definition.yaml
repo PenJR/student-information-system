@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Course Offerings'
+description: 'Course offerings (a course in a specific term and section). List Course Offerings saves course_offering_id.'

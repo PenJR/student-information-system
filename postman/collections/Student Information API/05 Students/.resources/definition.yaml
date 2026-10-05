@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Students'
+description: 'Student CRUD and search. List Students saves student_id. Create Student saves new_student_id.'

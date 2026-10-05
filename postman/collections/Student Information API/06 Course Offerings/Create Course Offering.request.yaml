@@ -1,0 +1,31 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/course-offerings'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "course_id": {{course_id}},
+      "academic_term_id": {{academic_term_id}},
+      "section": "B",
+      "max_students": 30
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created offering has id", () => {
+        const json = pm.response.json();
+        const offering = json.data || json;
+        pm.expect(offering).to.have.property("id");
+      });

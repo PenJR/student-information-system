@@ -1,0 +1,31 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/programs'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Test Program",
+      "code": "TP101",
+      "description": "A test program created via Postman"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created program has id and name", () => {
+        const json = pm.response.json();
+        const program = json.data || json;
+        pm.expect(program).to.have.property("id");
+        pm.expect(program).to.have.property("name");
+      });

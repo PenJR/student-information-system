@@ -1,0 +1,32 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/courses'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "code": "CS999",
+      "name": "Test Course",
+      "description": "A test course created via Postman",
+      "units": 3
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created course has id and name", () => {
+        const json = pm.response.json();
+        const course = json.data || json;
+        pm.expect(course).to.have.property("id");
+        pm.expect(course).to.have.property("name");
+      });

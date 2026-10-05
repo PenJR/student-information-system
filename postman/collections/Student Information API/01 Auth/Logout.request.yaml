@@ -1,0 +1,23 @@
+$kind: http-request
+order: 9000
+method: POST
+url: '{{base_url}}/auth/logout'
+headers:
+  - key: Accept
+    value: application/json
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", () => {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Logout message present", () => {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("message");
+      });
+
+      // Clear the stored token
+      pm.environment.unset("auth_token");
+      console.log("auth_token cleared from environment");

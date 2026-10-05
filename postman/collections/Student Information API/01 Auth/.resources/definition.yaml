@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Auth'
+description: 'Authentication endpoints — login, get current user, and logout. Run Login first to set the auth_token environment variable.'

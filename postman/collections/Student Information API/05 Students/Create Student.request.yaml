@@ -1,0 +1,44 @@
+$kind: http-request
+order: 2000
+method: POST
+url: '{{base_url}}/students'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Accept
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "email": "jane.doe.test@example.test",
+      "student_number": "2026-99999",
+      "program_id": {{program_id}},
+      "year_level": 1,
+      "status": "ACTIVE"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201 Created", () => {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Created student has id and student_number", () => {
+        const json = pm.response.json();
+        const student = json.data || json;
+        pm.expect(student).to.have.property("id");
+        pm.expect(student).to.have.property("student_number");
+        pm.expect(student).to.have.property("email");
+      });
+
+      // Save new student id for update/delete tests
+      const json = pm.response.json();
+      const student = json.data || json;
+      if (student && student.id) {
+        pm.environment.set("new_student_id", student.id);
+        console.log("new_student_id set to", student.id);
+      }

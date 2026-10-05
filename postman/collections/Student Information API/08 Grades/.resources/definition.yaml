@@ -1,0 +1,3 @@
+$kind: collection
+name: 'Grades'
+description: 'Midterm and final grades for enrollments. Grade values are percentages (0–100).'
