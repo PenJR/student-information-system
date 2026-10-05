@@ -112,14 +112,14 @@ This file tracks Activity 1 (Laravel API) and Activity 2 (React frontend). An it
 - [x] API base URL via `VITE_API_BASE_URL`
 - [x] No second backend / no direct SQLite access
 - [ ] Frontend README is still the Vite template
-- [ ] `.env.example` for the frontend is missing
-- [ ] Live connection to the Laravel API not verified in this session
+- [x] Frontend `.env.example` exists with the Laravel API base URL
+- [x] Live connection verified: seeded login, protected student listing, and academic-record request succeeded
 
 ### Later frontend sections (summary)
 
 - [x] Login, token storage, `/auth/me`, logout, protected routes, 401 interceptor
 - [x] Dashboard, students, programs, courses, terms, offerings, grades, profile modules exist
-- [ ] Academic record page is missing
+- [x] Academic record page calls the Laravel endpoint and displays API student, term, course, enrollment, and grade data; protected routes and student-only navigation are wired
 - [ ] Enrollments route exists but is not in the main navigation
 - [ ] Student edit/delete UI, enrollment create/drop, richer offering forms, and dedicated 403/404/409/500 screens are incomplete
 - [ ] Frontend automated tests are missing
@@ -127,4 +127,4 @@ This file tracks Activity 1 (Laravel API) and Activity 2 (React frontend). An it
 
 ## Next implementation step
 
-Finish Activity 1 Section 1 by keeping Git history and confirming the API process starts. Do not start a new major backend domain change until that is done.
+Continue Activity 2 one slice at a time. Add frontend tests around authentication, protected routes, and API-backed pages before expanding enrollment and resource-management workflows. The Laravel API was reachable and tested during the academic-record implementation.
